@@ -169,7 +169,7 @@ server = function(input, output, session){
 
   # Documentation
   output$markdown <- renderUI({
-    includeMarkdown("/Users/vinod/Downloads/scRNA_shiny-master/README.md")
+    includeMarkdown("README.md")
   }) 
   
   # Marker Plot Double
