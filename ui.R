@@ -28,9 +28,9 @@ fluidPage(
                                       br(),
                                       br(),
                                       #h3(textOutput("caption")),
-                                      plotOutput("MarkerGenePlotSingle"),
-                                      plotOutput("ViolinPlotSingle"),
-                                      plotOutput("CategoricalPlotSingle")
+                                      plotlyOutput("MarkerGenePlotSingle"),
+                                      plotlyOutput("ViolinPlotSingle"),
+                                      plotlyOutput("CategoricalPlotSingle")
                             )
                    ),
                    tabPanel("Double Marker", value=3,

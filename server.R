@@ -24,25 +24,31 @@ function(input, output, session){
   
   # update values based on input from ui
   outVar_single = reactive({
-    if (input$subset_single == 'Genes'){mydata=rownames(genes)}
-    else if (input$subset_single == 'Numeric Metadata') {mydata=meta_nums}
-    else if (input$subset_single == 'PCs') {mydata=pcs}
+    mydata = switch(input$subset_single, 
+                   'Genes' = rownames(genes),
+                   'Numeric Metadata' = meta_nums,
+                   "PCs" = pcs
+    )
     mydata
   })
   
   # update values based on input from ui
   outVar_double = reactive({
-    if (input$subset_double == 'Genes'){mydata=rownames(genes)}
-    else if (input$subset_double == 'Numeric Metadata') {mydata=meta_nums}
-    else if (input$subset_double == 'PCs') {mydata=pcs}
+    mydata = switch(input$subset_double, 
+                    'Genes' = rownames(genes),
+                    'Numeric Metadata' = meta_nums,
+                    "PCs" = pcs
+    )
     mydata
   })
   
   # update values based on input from ui
   outVar_seperated = reactive({
-    if (input$subset_seperated == 'Genes'){mydata=rownames(genes)}
-    else if (input$subset_seperated == 'Numeric Metadata') {mydata=meta_nums}
-    else if (input$subset_seperated == 'PCs') {mydata=pcs}
+    mydata = switch(input$subset_seperated, 
+                    'Genes' = rownames(genes),
+                    'Numeric Metadata' = meta_nums,
+                    "PCs" = pcs
+    )
     mydata
   })
 
@@ -53,113 +59,92 @@ function(input, output, session){
   
   # Reduction Type for the Single Marker Plot
   observe({
-    updateSelectInput(session, "reduction_single",
-                      choices = reductions
-    )})
+    updateSelectInput(session, "reduction_single", choices = reductions)
+  })
   
   # Reduction Type for the Double Marker Plot
   observe({
-    updateSelectInput(session, "reduction_double",
-                      choices = reductions
-    )})
+    updateSelectInput(session, "reduction_double", choices = reductions)
+  })
   
   # Primary numeric value in the double marker plot
   observe({
-    updateSelectInput(session, "numeric",
-                      choices = outVar_double()
-    )})
+    updateSelectInput(session, "numeric", choices = outVar_double())
+  })
   
   # Secondary numeric value in the double marker plot
   observe({
-    updateSelectInput(session, "numeric2",
-                      choices = outVar_double()
-    )})
+    updateSelectInput(session, "numeric2", choices = outVar_double())
+  })
   
   # Only numeric input for the single marker plot
   observe({
-    updateSelectInput(session, "numeric_single",
-                      choices = outVar_single()
-    )})
+    updateSelectInput(session, "numeric_single", choices = outVar_single())
+  })
   
   # Cluster Tree identity
   observe({
-    updateSelectInput(session, "identity_tree",
-                      choices = meta_cats
-    )})
-  
+    updateSelectInput(session, "identity_tree", choices = meta_cats)
+  })
   
   # Seperated Identity
   observe({
-    updateSelectInput(session, "identity_seperated",
-                      choices = meta_cats
-    )})
+    updateSelectInput(session, "identity_seperated", choices = meta_cats)
+  })
   
   # Seperated Numeric
   observe({
-    updateSelectizeInput(session, "numeric_seperated",
-                      choices = outVar_seperated(), server = TRUE
-    )})
+    updateSelectizeInput(session, "numeric_seperated", choices = outVar_seperated(), server = TRUE)
+  })
   
   # Seperated Reduction
   observe({
-    updateSelectInput(session, "reduction_seperated",
-                      choices = reductions
-    )})
+    updateSelectInput(session, "reduction_seperated", choices = reductions)
+  })
 
-  
-  
   # Seperated categroical Identity
   observe({
-    updateSelectInput(session, "identity_seperated_cateogrical",
-                      choices = meta_cats
-    )})
+    updateSelectInput(session, "identity_seperated_cateogrical", choices = meta_cats)
+  })
   
   # Seperated categorical identity2
   observe({
-    updateSelectInput(session, "identity2_seperated_categorical",
-                      choices = meta_cats
-    )})
+    updateSelectInput(session, "identity2_seperated_categorical", choices = meta_cats)
+  })
   
   # Seperated categorical Reduction
   observe({
-    updateSelectInput(session, "reduction_seperated_categorical",
-                      choices = reductions
-    )})
+    updateSelectInput(session, "reduction_seperated_categorical", choices = reductions)
+  })
   
   
   # Numeric input list for the marker set
   observe({
-    updateSelectizeInput(session, "numeric_b",
-                         choices = rownames(genes), server = TRUE
-    )})
+    updateSelectizeInput(session, "numeric_b", choices = rownames(genes), server = TRUE)
+  })
   
   
   # Multiple Feature Plot
   observe({
-    updateSelectizeInput(session, "multiple_feature_list",
-                      choices = rownames(genes), server = TRUE
-    )})
+    updateSelectizeInput(session, "multiple_feature_list", choices = rownames(genes), server = TRUE)
+  })
   
   
   # Table Identity
   observe({
-    updateSelectInput(session, "identity_table",
-                      choices = meta_cats
-    
-    )})
+    updateSelectInput(session, "identity_table", choices = meta_cats)
+  })
   
   
   # Table Marker
   observe({
-    updateSelectInput(session, "compare_table",
-                      choices = getResChoices()
-    )})
+    updateSelectInput(session, "compare_table", choices = getResChoices())
+  })
   
   # Table Compare
   observe({
-    updateSelectInput(session, "markers_table",
-                      choices = getResChoices()
-    )})
+    updateSelectInput(session, "markers_table", choices = getResChoices())
+  })
   
 
   # Documentation
@@ -170,24 +155,16 @@ function(input, output, session){
   # Marker Plot Double
   output$MarkerGenePlot <- renderPlot({
     temp_aggregate <- aggregate()
-    
-    FeaturePlot(
-      temp_aggregate,
-      c(input$numeric, input$numeric2),
-      reduction=input$reduction_double
-    )
+    FeaturePlot(temp_aggregate, c(input$numeric, input$numeric2), reduction=input$reduction_double)
   })
 
   
   # Marker Plot Single
-  output$MarkerGenePlotSingle <- renderPlot({
+  output$MarkerGenePlotSingle <- renderPlotly({
     temp_aggregate <- aggregate()
-    
-    FeaturePlot(
-      temp_aggregate,
-      c(input$numeric_single),
-      reduction=input$reduction_single
-    )
+    p <- FeaturePlot(temp_aggregate, c(input$numeric_single), reduction=input$reduction_single) +
+      theme_minimal()
+    ggplotly(p)
   })
   
   
@@ -202,12 +179,14 @@ function(input, output, session){
   
   
   # Single Feature Categorical Feature Plot
-  output$CategoricalPlotSingle <- renderPlot({
+  output$CategoricalPlotSingle <- renderPlotly({
     temp_aggregate <- aggregate()
     Idents(temp_aggregate) <- input$categorical_single
     order <- sort(levels(temp_aggregate))
     levels(temp_aggregate) <- order
-    DimPlot(object = temp_aggregate, group.by=input$categorical_single, pt.size=0.5, reduction = input$reduction_single, label = T)
+    p <- DimPlot(object = temp_aggregate, group.by=input$categorical_single, pt.size=0.5, reduction = input$reduction_single, label = T) +
+      theme_minimal()
+    ggplotly(p)
   })
   
   
@@ -222,12 +201,14 @@ function(input, output, session){
   
   
   # Single Feature Violin Plot
-  output$ViolinPlotSingle <- renderPlot({
+  output$ViolinPlotSingle <- renderPlotly({
     temp_aggregate <- aggregate()
     Idents(temp_aggregate) <- input$categorical_single
     order <- sort(levels(temp_aggregate))
     levels(temp_aggregate) <- order
-    VlnPlot(object = temp_aggregate, features = c(input$numeric_single), pt.size = 0.05)
+    p <- VlnPlot(object = temp_aggregate, features = c(input$numeric_single), pt.size = 0.05) + 
+      theme_minimal()
+    ggplotly(p)
   })
   
   
@@ -244,13 +225,7 @@ function(input, output, session){
   # Multiple Feature Plot
   output$MultipleFeaturePlot <- renderPlot({
     temp_aggregate <- aggregate()
-    FeaturePlot(
-      temp_aggregate,
-      input$multiple_feature_list,
-      blend=FALSE,
-      reduction=input$multiple_feature_reduction,
-      ncol=4
-    )
+    FeaturePlot(temp_aggregate, input$multiple_feature_list, blend=FALSE, reduction=input$multiple_feature_reduction, ncol=4)
   })
   
   
@@ -295,7 +270,9 @@ function(input, output, session){
                                                  eval(call('$', temp_aggregate[[]], input$identity2_seperated_categorical))),1))
     colnames(length_data) = c(input$identity_seperated_categorical, input$identity2_seperated_categorical, 'Freq')
     mycol <- c("navy", "blue", "cyan", "lightcyan", "yellow", "red", "red4")
-    ggplot(length_data, aes_string(x=input$identity_seperated_categorical, y=input$identity2_seperated_categorical, fill='Freq')) + geom_tile() + scale_fill_gradientn(colours = mycol)
+    ggplot(length_data, aes_string(x=input$identity_seperated_categorical, y=input$identity2_seperated_categorical, fill='Freq')) + 
+      geom_tile() + 
+      scale_fill_gradientn(colours = mycol)
   })
   
   
@@ -305,12 +282,12 @@ function(input, output, session){
     Idents(temp_aggregate) <- input$identity_seperated
     order <- sort(levels(temp_aggregate))
     levels(temp_aggregate) <- order
-    FeaturePlot(temp_aggregate, c(input$numeric_seperated), reduction=input$reduction_seperated,
+    FeaturePlot(temp_aggregate, c(input$numeric_seperated), reduction = input$reduction_seperated,
       split.by = input$identity_seperated2, ncol=4
     )
   })
   
-  # Seperated Dim Plot
+  # Separated Dim Plot
   output$SeperatedDim <- renderPlot({
     temp_aggregate <- aggregate()
     Idents(temp_aggregate) <- input$identity_seperated
@@ -320,7 +297,7 @@ function(input, output, session){
                 split.by = input$identity_seperated2, ncol=4
     )
   })
-  # Seperated Violin Plot
+  # Separated Violin Plot
   output$SeperatedViolin <- renderPlot({
     temp_aggregate <- aggregate()
     Idents(temp_aggregate) <- input$identity_seperated
@@ -330,7 +307,7 @@ function(input, output, session){
   })
   
   
-  # Seperated Counts table
+  # Separated Counts table
   output$SeperatedCounts <- renderTable({
     temp_aggregate <- aggregate()
     marker = c(input$numeric_seperated)
