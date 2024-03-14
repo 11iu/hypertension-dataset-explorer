@@ -205,8 +205,21 @@ fluidPage(
                                       #h3(textOutput("caption")),
                                       tableOutput("markers")
                             )
-                   ),
-                   #                  id = "tabselected"
+                   ), 
+                   tabPanel("Download", value=10,
+                            br(),
+                            div(style="display: inline-block;vertical-align:top; width: 24%;",
+                                selectInput("dataset_download", "Dataset",
+                                            c(datasets))),
+                            
+                            mainPanel(width = 12,
+                                      br(),
+                                      br(),
+                                      h2("Dataset (.rds format): "),
+                                      br(),
+                                      textOutput("download_link")
+                            )
+                   )
                  )
     ),
     mainPanel(width = 12)

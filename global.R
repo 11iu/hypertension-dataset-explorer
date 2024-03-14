@@ -3,6 +3,8 @@
 # take in the file, get list of genes, get metadata numbers and categories, get pcs 1-9, and factors..
 aggregate <- readRDS('datasets/mouse.MCA.RNA.anno.v2.rds') # default one
 datasets <- c('rat.ss.MSA.RNA.anno.v2.rds', 'rat.ss.LV.RNA.anno.v2.rds', 'rat.ss.HYP.RNA.anno.rds', 'rat.sp.MSA.RNA.anno.v2.rds', 'rat.sp.MCA.RNA.anno.v2.rds', 'rat.sp.LV.RNA.anno.v2.rds', 'rat.sp.LK.multiomics.anno.v2.rds', 'mouse.MCA.RNA.anno.v2.rds', 'mouse.LV.RNA.anno.v2.rds', 'mouse.LK.multiomics.anno.v2.rds', 'mouse.HYP.RNA.anno.rds')
+download_links <- c('test1', 'test2', 'test3', 'test4', 'test5', 'test6', 'test7', 'test8', 'test9', 'test10', 'test11')
+links_mapping <- setNames(download_links, datasets)
 
 # default values
 genes <- aggregate@assays$RNA

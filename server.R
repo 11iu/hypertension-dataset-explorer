@@ -19,6 +19,7 @@ function(input, output, session){
     readRDS(paste("datasets/", input$dataset_sepfea, sep=""))
     readRDS(paste("datasets/", input$dataset_sepcat, sep=""))
     readRDS(paste("datasets/", input$dataset_marktab, sep=""))
+    readRDS(paste("datasets/", input$dataset_download, sep=""))
   })
   
   # update values based on input from ui
@@ -397,6 +398,10 @@ function(input, output, session){
       theme(axis.text.x = element_text(angle = 90, hjust = 1))
     # }, height = 1000, width = 900 )
   }, height = 1000)
+  
+  output$download_link <- renderText({
+    links_mapping[input$dataset_download]
+  })
   
   # Potential to do, add DimPlot or HeatMap
 }
