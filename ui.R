@@ -1,4 +1,5 @@
 fluidPage(
+  useShinyjs(),
   titlePanel("scRNA data of Mouse and Rat for Hypertension"),
   sidebarLayout(
     sidebarPanel(width = 12,
@@ -60,9 +61,9 @@ fluidPage(
                                       br(),
                                       br(),
                                       #h3(textOutput("caption")),
-                                      plotOutput("MarkerGenePlot"),
-                                      plotOutput("ViolinPlot"),
-                                      plotOutput("CategoricalPlot")
+                                      plotlyOutput("MarkerGenePlotDouble"),
+                                      plotlyOutput("ViolinPlotDouble"),
+                                      plotlyOutput("CategoricalPlotDouble")
                             )
                    ),
                    tabPanel("Marker Set (Grid)", value=4,
@@ -118,8 +119,8 @@ fluidPage(
                             mainPanel(width = 12,
                                       br(),
                                       br(),
-                                      plotOutput("MultipleFeatureCategoricalPlot"),
-                                      plotOutput("MultipleFeaturePlot",  height = "1000px")
+                                      plotlyOutput("MultipleFeatureCategoricalPlot"),
+                                      plotlyOutput("MultipleFeaturePlot",  height = "1000px")
                             )
                    ),
                    tabPanel("Cluster Tree", value=6,
@@ -165,9 +166,9 @@ fluidPage(
                                       br(),
                                       br(),
                                       #h3(textOutput("caption")),
-                                      plotOutput("SeperatedFeature", height = "500px"),
-                                      plotOutput("SeperatedDim"),
-                                      plotOutput("SeperatedViolin", width="2000px"),
+                                      plotlyOutput("SeperatedFeature", height = "500px"),
+                                      plotlyOutput("SeperatedDim"),
+                                      plotlyOutput("SeperatedViolin", width="2000px"),
                                       tableOutput("SeperatedCounts")
                                       
                             )
@@ -192,9 +193,9 @@ fluidPage(
                                       br(),
                                       br(),
                                       #h3(textOutput("caption")),
-                                      plotOutput("SeperatedIdentityCategorical", height = "500px"),
-                                      plotOutput("SeperatedIdentity2Categorical"),
-                                      plotOutput("SeperatedCountsCategorical")
+                                      plotlyOutput("SeperatedIdentityCategorical", height = "500px"),
+                                      plotlyOutput("SeperatedIdentity2Categorical"),
+                                      plotlyOutput("SeperatedCountsCategorical")
                                       
                             )
                    ),
@@ -223,18 +224,22 @@ fluidPage(
                    ), 
                    tabPanel("Download", value=10,
                             br(),
-                            div(style="display: flex; justify-content: space-between; vertical-align:top;",
+                            div(style="display: flex; flex-direction: column; justify-content: space-between; vertical-align:top;",
                               div(style="flex: 1; margin: 0 0.4rem;",
                                   selectInput("dataset_download", "Dataset",
-                                              c(datasets)))
+                                              c(datasets))
+                              ),
+                              
+                              div(style="flex: 1; margin: 0 0.4rem;",
+                                  actionButton("download_link", " (.rds format, Seurat object)", icon("download"))
+                              )
+
+                              
                             ),
                             
                             mainPanel(width = 12,
-                                      br(),
-                                      br(),
-                                      h2("Dataset (.rds format)"),
-                                      br(),
-                                      textOutput("download_link")
+                                      #TODO - display a short summary of the data being downloaded
+                                      
                             )
                    )
                  )

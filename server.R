@@ -1,12 +1,3 @@
-library(shiny)
-library(Seurat)
-library(ggplot2)
-library(dplyr)
-library(markdown)
-library(tidyr)
-library(ggthemes)
-library(plotly)
-
 function(input, output, session){
   
   # update dataset based on selection from ui
@@ -153,9 +144,11 @@ function(input, output, session){
   }) 
   
   # Marker Plot Double
-  output$MarkerGenePlot <- renderPlot({
+  output$MarkerGenePlotDouble <- renderPlotly({
     temp_aggregate <- aggregate()
-    FeaturePlot(temp_aggregate, c(input$numeric, input$numeric2), reduction=input$reduction_double)
+    p <- FeaturePlot(temp_aggregate, c(input$numeric, input$numeric2), reduction=input$reduction_double) +
+      theme_minimal()
+    ggplotly(p)
   })
 
   
@@ -169,12 +162,14 @@ function(input, output, session){
   
   
   # Double Feature Categorical Feature Plot
-  output$CategoricalPlot <- renderPlot({
+  output$CategoricalPlotDouble <- renderPlotly({
     temp_aggregate <- aggregate()
     Idents(temp_aggregate) <- input$categorical
     order <- sort(levels(temp_aggregate))
     levels(temp_aggregate) <- order
-    DimPlot(object = temp_aggregate, pt.size=0.5, reduction = input$reduction_double, label = T)
+    p <- DimPlot(object = temp_aggregate, pt.size=0.5, reduction = input$reduction_double, label = T, repel = TRUE) + 
+      theme_minimal()
+    ggplotly(p)
   })
   
   
@@ -184,19 +179,21 @@ function(input, output, session){
     Idents(temp_aggregate) <- input$categorical_single
     order <- sort(levels(temp_aggregate))
     levels(temp_aggregate) <- order
-    p <- DimPlot(object = temp_aggregate, group.by=input$categorical_single, pt.size=0.5, reduction = input$reduction_single, label = T) +
+    p <- DimPlot(object = temp_aggregate, group.by=input$categorical_single, pt.size=0.5, reduction = input$reduction_single, label = T, repel = TRUE) +
       theme_minimal()
     ggplotly(p)
   })
   
   
   # Double Feature Violin Plot
-  output$ViolinPlot <- renderPlot({
+  output$ViolinPlotDouble <- renderPlotly({
     temp_aggregate <- aggregate()
     Idents(temp_aggregate) <- input$categorical
     order <- sort(levels(temp_aggregate))
     levels(temp_aggregate) <- order
-    VlnPlot(object = temp_aggregate, features = c(input$numeric, input$numeric2), pt.size = 0.05)
+    p <- VlnPlot(object = temp_aggregate, features = c(input$numeric, input$numeric2), pt.size = 0.05) + 
+      theme_minimal()
+    ggplotly(p)
   })
   
   
@@ -218,92 +215,101 @@ function(input, output, session){
     Idents(temp_aggregate) <- input$identity_tree
     temp_aggregate <- BuildClusterTree(
       temp_aggregate, dims = use.pcs)
-    PlotClusterTree(temp_aggregate)
+    PlotClusterTree(temp_aggregate) 
   })
   
   
   # Multiple Feature Plot
-  output$MultipleFeaturePlot <- renderPlot({
+  output$MultipleFeaturePlot <- renderPlotly({
     temp_aggregate <- aggregate()
-    FeaturePlot(temp_aggregate, input$multiple_feature_list, blend=FALSE, reduction=input$multiple_feature_reduction, ncol=4)
+    p <- FeaturePlot(temp_aggregate, input$multiple_feature_list, blend=FALSE, reduction=input$multiple_feature_reduction, ncol=4) + 
+      theme_minimal()
+    ggplotly(p)
   })
   
   
   # Multiple Feature Categorical Plot
-  output$MultipleFeatureCategoricalPlot <- renderPlot({
+  output$MultipleFeatureCategoricalPlot <- renderPlotly({
     temp_aggregate <- aggregate()
     Idents(temp_aggregate) <- input$multiple_feature_categorical_plot
     order <- sort(levels(temp_aggregate))
     levels(temp_aggregate) <- order
-    DimPlot(object = temp_aggregate, group.by=input$multiple_feature_categorical_plot, pt.size=0.5, reduction = input$multiple_feature_reduction, label = T)
-    })
+    p <- DimPlot(object = temp_aggregate, group.by=input$multiple_feature_categorical_plot, pt.size=0.5, reduction = input$multiple_feature_reduction, label = T, repel = TRUE) + 
+      theme_minimal()
+    ggplotly(p)
+  })
   
   
   # Seperated Identity Categorical Plot
-  output$SeperatedIdentityCategorical <- renderPlot({
+  output$SeperatedIdentityCategorical <- renderPlotly({
     temp_aggregate <- aggregate()
     Idents(temp_aggregate) <- input$identity_seperated_categorical
     order <- sort(levels(temp_aggregate))
     levels(temp_aggregate) <- order
-    DimPlot(temp_aggregate, reduction=input$reduction_seperated_categorical,
-            split.by = mysplitbydefault, ncol=4
-    )
+    p <- DimPlot(temp_aggregate, reduction=input$reduction_seperated_categorical, split.by = mysplitbydefault, ncol=4) +
+      theme_minimal()
+    ggplotly(p)
   })
   
   
   # Seperated Identity 2 Categorical Plot
-  output$SeperatedIdentity2Categorical <- renderPlot({
+  output$SeperatedIdentity2Categorical <- renderPlotly({
     temp_aggregate <- aggregate()
     Idents(temp_aggregate) <- input$identity2_seperated_categorical
     order <- sort(levels(temp_aggregate))
     levels(temp_aggregate) <- order
-    DimPlot(temp_aggregate, reduction=input$reduction_seperated_categorical,
-            split.by = mysplitbydefault, ncol=4
-    )
+    p <- DimPlot(temp_aggregate, reduction=input$reduction_seperated_categorical, split.by = mysplitbydefault, ncol=4) +
+      theme_minimal()
+    ggplotly(p)
   })
   
   
   # Seperated Categorical table
-  output$SeperatedCountsCategorical <- renderPlot({
+  output$SeperatedCountsCategorical <- renderPlotly({
     temp_aggregate <- aggregate()
     length_data = as.data.frame(prop.table(table(eval(call('$', temp_aggregate[[]], input$identity_seperated_categorical)), 
                                                  eval(call('$', temp_aggregate[[]], input$identity2_seperated_categorical))),1))
     colnames(length_data) = c(input$identity_seperated_categorical, input$identity2_seperated_categorical, 'Freq')
     mycol <- c("navy", "blue", "cyan", "lightcyan", "yellow", "red", "red4")
-    ggplot(length_data, aes_string(x=input$identity_seperated_categorical, y=input$identity2_seperated_categorical, fill='Freq')) + 
+    p <- ggplot(length_data, aes_string(x=input$identity_seperated_categorical, y=input$identity2_seperated_categorical, fill='Freq')) + 
       geom_tile() + 
-      scale_fill_gradientn(colours = mycol)
+      scale_fill_gradientn(colours = mycol) +
+      theme_minimal()
+    ggplotly(p)
   })
   
   
   # Seperated Feature Plot
-  output$SeperatedFeature <- renderPlot({
+  output$SeperatedFeature <- renderPlotly({
     temp_aggregate <- aggregate()
     Idents(temp_aggregate) <- input$identity_seperated
     order <- sort(levels(temp_aggregate))
     levels(temp_aggregate) <- order
-    FeaturePlot(temp_aggregate, c(input$numeric_seperated), reduction = input$reduction_seperated,
-      split.by = input$identity_seperated2, ncol=4
-    )
+    p <- FeaturePlot(temp_aggregate, c(input$numeric_seperated), reduction = input$reduction_seperated, split.by = input$identity_seperated2, ncol=4) + 
+      theme_minimal()
+    ggplotly(p)
   })
   
   # Separated Dim Plot
-  output$SeperatedDim <- renderPlot({
+  output$SeperatedDim <- renderPlotly({
     temp_aggregate <- aggregate()
     Idents(temp_aggregate) <- input$identity_seperated
     order <- sort(levels(temp_aggregate))
     levels(temp_aggregate) <- order
-    DimPlot(temp_aggregate, reduction=input$reduction_seperated,
-                split.by = input$identity_seperated2, ncol=4
-    )
+    p <- DimPlot(temp_aggregate, reduction=input$reduction_seperated, split.by = input$identity_seperated2, ncol=4) +
+      theme_minimal()
+    ggplotly(p)
   })
+  
   # Separated Violin Plot
-  output$SeperatedViolin <- renderPlot({
+  output$SeperatedViolin <- renderPlotly({
     temp_aggregate <- aggregate()
     Idents(temp_aggregate) <- input$identity_seperated
     order <- sort(levels(temp_aggregate))
     levels(temp_aggregate) <- order
-    VlnPlot(temp_aggregate, c(input$numeric_seperated), group.by = input$identity_seperated, split.by = input$identity_seperated2, ncol=4)
+    p <- VlnPlot(temp_aggregate, c(input$numeric_seperated), group.by = input$identity_seperated, split.by = input$identity_seperated2, ncol=4) +
+      theme_minimal()
+    ggplotly(p)
   })
   
   
@@ -377,9 +383,11 @@ function(input, output, session){
     # }, height = 1000, width = 900 )
   }, height = 1000)
   
-  output$download_link <- renderText({
-    links_mapping[input$dataset_download]
+  observeEvent(input$download_link, {
+    link <- links_mapping[input$dataset_download]
+    shinyjs::runjs(paste0('window.open("', link, '", "_blank");'))
   })
+  
   
   # Potential to do, add DimPlot or HeatMap
 }
