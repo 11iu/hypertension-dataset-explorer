@@ -69,16 +69,16 @@ fluidPage(
                                             c(datasets))),
                             selectInput("categorical_b", "Identity:",
                                         c(meta_cats)),
-                            selectizeInput("numeric_b", "Primary Numeric (csv format works here if pasted in):", "", 
-                                           options = list(
+                            selectizeInput("numeric_b", "Primary Numeric: csv format accepted", 
+                                           choices = NULL, multiple = TRUE, options = list(
+                                             maxItems=16,
                                              delimiter = ',',
                                              create = I("function(input, callback){
-                                              return {
-                                                value: input,
-                                                text: input
-                                               };
-                                            }")),
-                                           selected = NULL, multiple = TRUE), ## and switch multiple to True,
+                                                               return {
+                                                                 value: input,
+                                                                 text: input
+                                                                };
+                                              }"))),
                             mainPanel(width = 12,
                                       br(),
                                       br(),
@@ -94,20 +94,16 @@ fluidPage(
                                         c(meta_cats)),
                             selectInput("multiple_feature_reduction", "Reduction:",
                                         c(reductions)),
-                            selectizeInput("multiple_feature_list", "Primary Numeric: \n 
-                                                  - Csv format works best here if pasted in from premade lists. \n
-                                                  - Optimal for 5-16 features. \n
-                                                  - To be most effecient when removing entries hold SHIFT and click all, then delete.", "", 
-                                           options = list(
-                                             maxItems=16,
-                                             delimiter = ',',
-                                             create = I("function(input, callback){
-                                              return {
-                                                value: input,
-                                                text: input
-                                               };
-                                            }")),
-                                           selected = NULL, multiple = TRUE), ## and switch multiple to True,
+                            selectizeInput("multiple_feature_list", "Primary Numeric: csv format accepted, 5-16 features optimal",
+                                           choices = NULL, multiple = TRUE, options = list(
+                                                              maxItems=16,
+                                                              delimiter = ',',
+                                                              create = I("function(input, callback){
+                                                               return {
+                                                                 value: input,
+                                                                 text: input
+                                                                };
+                                                             }"))),
                             mainPanel(width = 12,
                                       br(),
                                       br(),
@@ -148,7 +144,7 @@ fluidPage(
                                 selectInput("identity_seperated2", "Identity:",
                                             c(meta_cats))),
                             div(style="display: inline-block;vertical-align:top; width: 20%;",
-                                selectInput("numeric_seperated", "Primary Numeric:", "")),
+                                selectizeInput("numeric_seperated", "Primary Numeric:", "")),
                             
                             mainPanel(width = 12,
                                       br(),
@@ -215,7 +211,7 @@ fluidPage(
                             mainPanel(width = 12,
                                       br(),
                                       br(),
-                                      h2("Dataset (.rds format): "),
+                                      h2("Dataset (.rds format)"),
                                       br(),
                                       textOutput("download_link")
                             )

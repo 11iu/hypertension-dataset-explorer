@@ -75,12 +75,6 @@ function(input, output, session){
                       choices = outVar_double()
     )})
   
-  # Numeric input list for the marker set (multiple =TRUE)
-  observe({
-    updateSelectizeInput(session, "numeric_b",
-                      choices = rownames(genes), server = TRUE
-    )})
-  
   # Only numeric input for the single marker plot
   observe({
     updateSelectInput(session, "numeric_single",
@@ -102,8 +96,8 @@ function(input, output, session){
   
   # Seperated Numeric
   observe({
-    updateSelectInput(session, "numeric_seperated",
-                      choices = outVar_seperated()
+    updateSelectizeInput(session, "numeric_seperated",
+                      choices = outVar_seperated(), server = TRUE
     )})
   
   # Seperated Reduction
@@ -133,12 +127,19 @@ function(input, output, session){
     )})
   
   
-    
+  # Numeric input list for the marker set
+  observe({
+    updateSelectizeInput(session, "numeric_b",
+                         choices = rownames(genes), server = TRUE
+    )})
+  
+  
   # Multiple Feature Plot
   observe({
     updateSelectizeInput(session, "multiple_feature_list",
                       choices = rownames(genes), server = TRUE
     )})
+  
   
   # Table Identity
   observe({
