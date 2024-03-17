@@ -120,7 +120,8 @@ fluidPage(
                                       br(),
                                       br(),
                                       plotlyOutput("MultipleFeatureCategoricalPlot"),
-                                      plotlyOutput("MultipleFeaturePlot",  height = "1000px")
+                                      # plotlyOutput("MultipleFeaturePlot",  height = "1000px")
+                                      uiOutput("MultipleFeaturePlot")
                             )
                    ),
                    tabPanel("Cluster Tree", value=6,

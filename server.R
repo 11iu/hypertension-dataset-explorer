@@ -143,15 +143,6 @@ function(input, output, session){
     includeMarkdown("README.md")
   }) 
   
-  # Marker Plot Double
-  output$MarkerGenePlotDouble <- renderPlotly({
-    temp_aggregate <- aggregate()
-    p <- FeaturePlot(temp_aggregate, c(input$numeric, input$numeric2), reduction=input$reduction_double) +
-      theme_minimal()
-    ggplotly(p)
-  })
-
-  
   # Marker Plot Single
   output$MarkerGenePlotSingle <- renderPlotly({
     temp_aggregate <- aggregate()
@@ -160,16 +151,34 @@ function(input, output, session){
     ggplotly(p)
   })
   
-  
-  # Double Feature Categorical Feature Plot
-  output$CategoricalPlotDouble <- renderPlotly({
+  # Marker Plot Double
+  output$MarkerGenePlotDouble <- renderPlotly({
     temp_aggregate <- aggregate()
-    Idents(temp_aggregate) <- input$categorical
-    order <- sort(levels(temp_aggregate))
-    levels(temp_aggregate) <- order
-    p <- DimPlot(object = temp_aggregate, pt.size=0.5, reduction = input$reduction_double, label = T, repel = TRUE) + 
-      theme_minimal()
-    ggplotly(p)
+    p1 <- ggplotly(FeaturePlot(temp_aggregate, input$numeric, reduction=input$reduction_double) +
+      theme_minimal())
+    p2 <- ggplotly(FeaturePlot(temp_aggregate, input$numeric2, reduction=input$reduction_double) +
+      theme_minimal())
+    combined_plot <- subplot(p1, style(p2, showlegend = F), nrows = 1, margin = 0.05) %>%
+      layout(title = "",
+             annotations = list(
+               list(
+                 text = input$numeric,
+                 x = 0.15,
+                 y = 0.95, 
+                 xref = 'paper',
+                 yref = 'paper',
+                 showarrow = FALSE
+               ),
+               list(
+                 text = input$numeric2, 
+                 x = 0.8,
+                 y = 0.95,
+                 xref = 'paper',
+                 yref = 'paper',
+                 showarrow = FALSE
+               )
+             )
+      )
   })
   
   
@@ -185,13 +194,13 @@ function(input, output, session){
   })
   
   
-  # Double Feature Violin Plot
-  output$ViolinPlotDouble <- renderPlotly({
+  # Double Feature Categorical Feature Plot
+  output$CategoricalPlotDouble <- renderPlotly({
     temp_aggregate <- aggregate()
     Idents(temp_aggregate) <- input$categorical
     order <- sort(levels(temp_aggregate))
     levels(temp_aggregate) <- order
-    p <- VlnPlot(object = temp_aggregate, features = c(input$numeric, input$numeric2), pt.size = 0.05) + 
+    p <- DimPlot(object = temp_aggregate, pt.size=0.5, reduction = input$reduction_double, label = T, repel = TRUE) +
       theme_minimal()
     ggplotly(p)
   })
@@ -209,6 +218,41 @@ function(input, output, session){
   })
   
   
+  # Double Feature Violin Plot
+  output$ViolinPlotDouble <- renderPlotly({
+    temp_aggregate <- aggregate()
+    Idents(temp_aggregate) <- input$categorical
+    order <- sort(levels(temp_aggregate))
+    levels(temp_aggregate) <- order
+    p1 <- ggplotly(VlnPlot(object = temp_aggregate, input$numeric, pt.size = 0.05) +
+                     theme_minimal())
+    p2 <- ggplotly(VlnPlot(object = temp_aggregate, input$numeric2, pt.size = 0.05) +
+                     theme_minimal())
+
+    combined_plot <- subplot(style(p1, showlegend = F), p2, nrows = 1, margin = 0.05) %>%
+      layout(title = "",
+        annotations = list(
+          list(
+            text = input$numeric,
+            x = 0.15,
+            y = 0.95,
+            xref = 'paper',
+            yref = 'paper',
+            showarrow = FALSE
+          ),
+          list(
+            text = input$numeric2,
+            x = 0.8,
+            y = 0.95,
+            xref = 'paper',
+            yref = 'paper',
+            showarrow = FALSE
+          )
+        )
+      )
+  })
+  
+  
   # Cluster Tree Plot
   output$ClusterTree <- renderPlot({
     temp_aggregate <- aggregate()
@@ -218,15 +262,33 @@ function(input, output, session){
     PlotClusterTree(temp_aggregate) 
   })
   
-  
-  # Multiple Feature Plot
-  output$MultipleFeaturePlot <- renderPlotly({
-    temp_aggregate <- aggregate()
-    p <- FeaturePlot(temp_aggregate, input$multiple_feature_list, blend=FALSE, reduction=input$multiple_feature_reduction, ncol=4) + 
-      theme_minimal()
-    ggplotly(p)
+  # create list of plotly plots for each feature in multifeaturelist
+  plot_list <- reactive({
+    result <- list()
+    for (i in seq_along(input$multiple_feature_list)) {
+      temp_aggregate <- aggregate()
+      result[[i]] = ggplotly(FeaturePlot(temp_aggregate, input$multiple_feature_list[[i]], blend=FALSE, reduction=input$multiple_feature_reduction) + 
+                               theme_minimal())
+    }
+    result
   })
   
+  # Multiple Feature Plot
+  output$MultipleFeaturePlot <- renderUI({
+    plot_output_list <- lapply(seq_along(plot_list()), function(i) {
+      plotlyOutput(outputId = paste("multi_feature_plot", i, sep = "_")) # make placeholder name plot_i for each plot
+    })
+    do.call(tagList, plot_output_list) # combines plotlyOutputs
+  })
+  
+  # Render each feature's graph
+  observe({
+    lapply(seq_along(plot_list()), function(i) {
+      output[[paste("multi_feature_plot", i, sep = "_")]] <- renderPlotly({
+        plot_list()[[i]]
+      })
+    })
+  })
   
   # Multiple Feature Categorical Plot
   output$MultipleFeatureCategoricalPlot <- renderPlotly({
