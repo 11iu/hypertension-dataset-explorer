@@ -2,7 +2,7 @@ function(input, output, session){
   
   # update dataset based on selection from ui
   aggregate <- reactive({
-    readRDS(paste("datasets/", input$dataset_double, sep=""))
+    readRDS(paste("datasets/", input$dataset_multi, sep=""))
     readRDS(paste("datasets/", input$dataset_single, sep=""))
     readRDS(paste("datasets/", input$dataset_markset, sep=""))
     readRDS(paste("datasets/", input$dataset_multifea, sep=""))
@@ -25,7 +25,7 @@ function(input, output, session){
   
   # update values based on input from ui
   outVar_double = reactive({
-    mydata = switch(input$subset_double, 
+    mydata = switch(input$subset_multi, 
                     'Genes' = rownames(genes),
                     'Numeric Metadata' = meta_nums,
                     "PCs" = pcs
@@ -55,18 +55,14 @@ function(input, output, session){
   
   # Reduction Type for the Double Marker Plot
   observe({
-    updateSelectInput(session, "reduction_double", choices = reductions)
+    updateSelectInput(session, "reduction_multi", choices = reductions)
   })
   
-  # Primary numeric value in the double marker plot
+  # Primary numeric value in the multiple marker plot
   observe({
-    updateSelectInput(session, "numeric", choices = outVar_double())
+    updateSelectizeInput(session, "multi_numeric", choices = outVar_double(), server = TRUE)
   })
   
-  # Secondary numeric value in the double marker plot
-  observe({
-    updateSelectInput(session, "numeric2", choices = outVar_double())
-  })
   
   # Only numeric input for the single marker plot
   observe({
@@ -151,36 +147,33 @@ function(input, output, session){
     ggplotly(p)
   })
   
-  # Marker Plot Double
-  output$MarkerGenePlotDouble <- renderPlotly({
-    temp_aggregate <- aggregate()
-    p1 <- ggplotly(FeaturePlot(temp_aggregate, input$numeric, reduction=input$reduction_double) +
-      theme_minimal())
-    p2 <- ggplotly(FeaturePlot(temp_aggregate, input$numeric2, reduction=input$reduction_double) +
-      theme_minimal())
-    combined_plot <- subplot(p1, style(p2, showlegend = F), nrows = 1, margin = 0.05) %>%
-      layout(title = "",
-             annotations = list(
-               list(
-                 text = input$numeric,
-                 x = 0.15,
-                 y = 0.95, 
-                 xref = 'paper',
-                 yref = 'paper',
-                 showarrow = FALSE
-               ),
-               list(
-                 text = input$numeric2, 
-                 x = 0.8,
-                 y = 0.95,
-                 xref = 'paper',
-                 yref = 'paper',
-                 showarrow = FALSE
-               )
-             )
-      )
+  multi_marker_gene_plot_list <- reactive({
+    result <- list()
+    for (i in seq_along(input$multi_numeric)) {
+      temp_aggregate <- aggregate()
+      result[[i]] = ggplotly(FeaturePlot(temp_aggregate, input$multi_numeric[[i]], blend=FALSE, reduction=input$reduction_multi) + 
+                               theme_minimal())
+    }
+    result
   })
   
+  # Marker Plot multiple
+  output$MarkerGenePlotMulti <- renderUI({
+    plot_output_list <- lapply(seq_along(multi_marker_gene_plot_list()), function(i) {
+      div(style="display: inline-block", plotlyOutput(outputId = paste("multi_marker_gene_plot", i, sep = "_"))) # make placeholder name plot_i for each plot
+    })
+    do.call(tagList, plot_output_list) # combines plotlyOutputs
+    
+  })
+  
+  # Render each multi gene plot's graph
+  observe({
+    lapply(seq_along(multi_marker_gene_plot_list()), function(i) {
+      output[[paste("multi_marker_gene_plot", i, sep = "_")]] <- renderPlotly({
+        multi_marker_gene_plot_list()[[i]]
+      })
+    })
+  })
   
   # Single Feature Categorical Feature Plot
   output$CategoricalPlotSingle <- renderPlotly({
@@ -194,13 +187,13 @@ function(input, output, session){
   })
   
   
-  # Double Feature Categorical Feature Plot
-  output$CategoricalPlotDouble <- renderPlotly({
+  # Multi Feature Categorical Feature Plot
+  output$CategoricalPlotMulti <- renderPlotly({
     temp_aggregate <- aggregate()
-    Idents(temp_aggregate) <- input$categorical
+    Idents(temp_aggregate) <- input$categorical_multi
     order <- sort(levels(temp_aggregate))
     levels(temp_aggregate) <- order
-    p <- DimPlot(object = temp_aggregate, pt.size=0.5, reduction = input$reduction_double, label = T, repel = TRUE) +
+    p <- DimPlot(object = temp_aggregate, pt.size=0.5, reduction = input$reduction_multi, label = T, repel = TRUE) +
       theme_minimal()
     ggplotly(p)
   })
@@ -217,39 +210,35 @@ function(input, output, session){
     ggplotly(p)
   })
   
+  # Multiple marker violin plot
+  multi_marker_vln_plot_list <- reactive({
+    result <- list()
+    for (i in seq_along(input$multi_numeric)) {
+      temp_aggregate <- aggregate()
+      Idents(temp_aggregate) <- input$categorical_multi
+      order <- sort(levels(temp_aggregate))
+      levels(temp_aggregate) <- order
+      result[[i]] = ggplotly(VlnPlot(object = temp_aggregate, features = input$multi_numeric[[i]], pt.size = 0.05) + 
+                               theme_minimal())
+    }
+    result
+  })
   
-  # Double Feature Violin Plot
-  output$ViolinPlotDouble <- renderPlotly({
-    temp_aggregate <- aggregate()
-    Idents(temp_aggregate) <- input$categorical
-    order <- sort(levels(temp_aggregate))
-    levels(temp_aggregate) <- order
-    p1 <- ggplotly(VlnPlot(object = temp_aggregate, input$numeric, pt.size = 0.05) +
-                     theme_minimal())
-    p2 <- ggplotly(VlnPlot(object = temp_aggregate, input$numeric2, pt.size = 0.05) +
-                     theme_minimal())
-
-    combined_plot <- subplot(style(p1, showlegend = F), p2, nrows = 1, margin = 0.05) %>%
-      layout(title = "",
-        annotations = list(
-          list(
-            text = input$numeric,
-            x = 0.15,
-            y = 0.95,
-            xref = 'paper',
-            yref = 'paper',
-            showarrow = FALSE
-          ),
-          list(
-            text = input$numeric2,
-            x = 0.8,
-            y = 0.95,
-            xref = 'paper',
-            yref = 'paper',
-            showarrow = FALSE
-          )
-        )
-      )
+  output$ViolinPlotMulti <- renderUI({
+    plot_output_list <- lapply(seq_along(multi_marker_vln_plot_list()), function(i) {
+      div(style="display: inline-block", plotlyOutput(outputId = paste("multi_marker_vln_plot", i, sep = "_"))) # make placeholder name plot_i for each plot
+    })
+    do.call(tagList, plot_output_list) # combines plotlyOutputs
+    
+  })
+  
+  # Render each feature's graph
+  observe({
+    lapply(seq_along(multi_marker_vln_plot_list()), function(i) {
+      output[[paste("multi_marker_vln_plot", i, sep = "_")]] <- renderPlotly({
+        multi_marker_vln_plot_list()[[i]]
+      })
+    })
   })
   
   
@@ -263,29 +252,29 @@ function(input, output, session){
   })
   
   # create list of plotly plots for each feature in multifeaturelist
-  plot_list <- reactive({
+  multi_feature_plot_list <- reactive({
     result <- list()
     for (i in seq_along(input$multiple_feature_list)) {
       temp_aggregate <- aggregate()
       result[[i]] = ggplotly(FeaturePlot(temp_aggregate, input$multiple_feature_list[[i]], blend=FALSE, reduction=input$multiple_feature_reduction) + 
-                               theme_minimal())
+                                 theme_minimal())
     }
     result
   })
   
   # Multiple Feature Plot
   output$MultipleFeaturePlot <- renderUI({
-    plot_output_list <- lapply(seq_along(plot_list()), function(i) {
-      plotlyOutput(outputId = paste("multi_feature_plot", i, sep = "_")) # make placeholder name plot_i for each plot
+    plot_output_list <- lapply(seq_along(multi_feature_plot_list()), function(i) {
+      div(style="display: inline-block", plotlyOutput(outputId = paste("multi_feature_plot", i, sep = "_"))) # make placeholder name plot_i for each plot
     })
     do.call(tagList, plot_output_list) # combines plotlyOutputs
   })
   
   # Render each feature's graph
   observe({
-    lapply(seq_along(plot_list()), function(i) {
+    lapply(seq_along(multi_feature_plot_list()), function(i) {
       output[[paste("multi_feature_plot", i, sep = "_")]] <- renderPlotly({
-        plot_list()[[i]]
+        multi_feature_plot_list()[[i]]
       })
     })
   })

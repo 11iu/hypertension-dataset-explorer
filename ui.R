@@ -36,34 +36,41 @@ fluidPage(
                                       plotlyOutput("CategoricalPlotSingle")
                             )
                    ),
-                   tabPanel("Double Marker", value=3,
+                   tabPanel("Multiple Marker", value=3,
                             br(),
                             div(style="display: flex; justify-content: space-between; vertical-align:top;",
                               div(style="flex: 1; margin: 0 0.4rem;",
-                                  selectInput("dataset_double", "Dataset",
+                                  selectInput("dataset_multi", "Dataset",
                                               c(datasets))),
                               div(style="flex: 1; margin: 0 0.4rem;",
-                                  selectInput("subset_double", "Numeric Analysis Type:",
+                                  selectInput("subset_multi", "Numeric Analysis Type:",
                                               c('Genes', 'Numeric Metadata', 'PCs'))),
                               div(style="flex: 1; margin: 0 0.4rem;",
-                                  selectInput("reduction_double", "Reduction:",
+                                  selectInput("reduction_multi", "Reduction:",
                                               c(reductions), selected = "umap")),
                               div(style="flex: 1; margin: 0 0.4rem;",
-                                  selectInput("categorical", "Identity:",
-                                              c(meta_cats))),
-                              div(style="flex: 1; margin: 0 0.4rem;",
-                                  selectInput("numeric", "Primary Numeric:", "")),
-                              
-                              div(style="flex: 1; margin: 0 0.4rem;",
-                                  selectInput('numeric2', 'Secondary Numeric', ""))
+                                  selectInput("categorical_multi", "Identity:",
+                                              c(meta_cats)))
+                            ),
+                            div(
+                              selectizeInput("multi_numeric", "Primary Numeric: csv format accepted, max 4", 
+                                             choices = NULL, multiple = TRUE, options = list(
+                                               maxItems=4,
+                                               delimiter = ',',
+                                               create = I("function(input, callback){
+                                                               return {
+                                                                 value: input,
+                                                                 text: input
+                                                                };
+                                              }")))
                             ),
                             mainPanel(width = 12,
                                       br(),
                                       br(),
                                       #h3(textOutput("caption")),
-                                      plotlyOutput("MarkerGenePlotDouble"),
-                                      plotlyOutput("ViolinPlotDouble"),
-                                      plotlyOutput("CategoricalPlotDouble")
+                                      uiOutput("MarkerGenePlotMulti"),
+                                      uiOutput("ViolinPlotMulti"),
+                                      plotlyOutput("CategoricalPlotMulti")
                             )
                    ),
                    tabPanel("Marker Set (Grid)", value=4,
@@ -120,7 +127,6 @@ fluidPage(
                                       br(),
                                       br(),
                                       plotlyOutput("MultipleFeatureCategoricalPlot"),
-                                      # plotlyOutput("MultipleFeaturePlot",  height = "1000px")
                                       uiOutput("MultipleFeaturePlot")
                             )
                    ),
