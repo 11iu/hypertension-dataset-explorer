@@ -439,6 +439,39 @@ function(input, output, session){
     shinyjs::runjs(paste0('window.open("', link, '", "_blank");'))
   })
   
+  # descriptions
+  output$singleMarkerDescription <- renderText({
+    text <- "Single Marker Description"
+  })
+  
+  output$multiMarkerDescription <- renderText({
+    text <- "Multiple Marker Description"
+  })
+  
+  output$markerSetDescription <- renderText({
+    text <- "Marker set Description"
+  })
+  
+  output$multiFeatureDescription <- renderText({
+    text <- "Multiple Feature Description"
+  })
+  
+  output$clusterTreeDescription <- renderText({
+    text <- "Cluster Tree Description"
+  })
+  
+  output$seperatedFeatureDescription <- renderText({
+    text <- "Seperated Feature Description"
+  })
+  
+  output$seperatedCatDescription <- renderText({
+    text <- "Seperated Categorical Description"
+  })
+  
+  output$markerTableDescription <- renderText({
+    text <- "Marker Table Description"
+  })
+  
   
   # Potential to do, add DimPlot or HeatMap
 }

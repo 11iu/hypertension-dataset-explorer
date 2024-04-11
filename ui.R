@@ -29,11 +29,12 @@ fluidPage(
                             
                             mainPanel(width = 12,
                                       br(),
-                                      br(),
-                                      #h3(textOutput("caption")),
-                                      plotlyOutput("MarkerGenePlotSingle"),
-                                      plotlyOutput("ViolinPlotSingle"),
-                                      plotlyOutput("CategoricalPlotSingle")
+                                      h3(style="margin: 3rem;", textOutput("singleMarkerDescription")),
+                                      div(style="margin: 4rem",
+                                          plotlyOutput("MarkerGenePlotSingle"),
+                                          plotlyOutput("ViolinPlotSingle"), 
+                                          plotlyOutput("CategoricalPlotSingle")
+                                      )
                             )
                    ),
                    tabPanel("Multiple Marker", value=3,
@@ -66,11 +67,12 @@ fluidPage(
                             ),
                             mainPanel(width = 12,
                                       br(),
-                                      br(),
-                                      #h3(textOutput("caption")),
-                                      uiOutput("MarkerGenePlotMulti"),
-                                      uiOutput("ViolinPlotMulti"),
-                                      plotlyOutput("CategoricalPlotMulti")
+                                      div(style="margin: 3rem;", h3(textOutput("multiMarkerDescription"))),
+                                      div(style="margin: 4rem",
+                                        uiOutput("MarkerGenePlotMulti"),
+                                        uiOutput("ViolinPlotMulti"),
+                                        plotlyOutput("CategoricalPlotMulti")
+                                      )
                             )
                    ),
                    tabPanel("Marker Set (Grid)", value=4,
@@ -95,8 +97,10 @@ fluidPage(
                             ),
                             mainPanel(width = 12,
                                       br(),
-                                      br(),
-                                      plotOutput("MarkerSet")
+                                      div(style="margin: 3rem", h3(textOutput("markerSetDescription"))),
+                                      div(style="margin: 4rem",
+                                        plotOutput("MarkerSet")
+                                      )
                             )
                    ),
                    tabPanel("Multiple Feature Plot", value=5,
@@ -125,9 +129,11 @@ fluidPage(
                             ),
                             mainPanel(width = 12,
                                       br(),
-                                      br(),
-                                      plotlyOutput("MultipleFeatureCategoricalPlot"),
-                                      uiOutput("MultipleFeaturePlot")
+                                      div(style="margin: 3rem", h3(textOutput("multiFeatureDescription"))),
+                                      div(style="margin: 4rem",
+                                        plotlyOutput("MultipleFeatureCategoricalPlot"),
+                                        uiOutput("MultipleFeaturePlot")
+                                      )
                             )
                    ),
                    tabPanel("Cluster Tree", value=6,
@@ -142,9 +148,10 @@ fluidPage(
                               ),
                             mainPanel(width = 12,
                                       br(),
-                                      br(),
-                                      #h3(textOutput("caption")),
-                                      plotOutput("ClusterTree"),
+                                      div(style="margin: 3rem", h3(textOutput("clusterTreeDescription"))),
+                                      div(style="margin: 4rem",
+                                        plotOutput("ClusterTree")
+                                      )
                             )
                    ),
                    tabPanel("Seperated Feature", value=7,
@@ -171,13 +178,13 @@ fluidPage(
                             
                             mainPanel(width = 12,
                                       br(),
-                                      br(),
-                                      #h3(textOutput("caption")),
-                                      plotlyOutput("SeperatedFeature", height = "500px"),
-                                      plotlyOutput("SeperatedDim"),
-                                      plotlyOutput("SeperatedViolin", width="2000px"),
-                                      tableOutput("SeperatedCounts")
-                                      
+                                      div(style="margin:3rem", h3(textOutput("seperatedFeatureDescription"))),
+                                      div(style="margin: 4rem",
+                                        plotlyOutput("SeperatedFeature", height = "500px"),
+                                        plotlyOutput("SeperatedDim"),
+                                        plotlyOutput("SeperatedViolin", width="2000px"),
+                                        tableOutput("SeperatedCounts")
+                                      )
                             )
                    ),
                    tabPanel("Seperated Categorical", value=8,
@@ -198,11 +205,12 @@ fluidPage(
                             
                             mainPanel(width = 12,
                                       br(),
-                                      br(),
-                                      #h3(textOutput("caption")),
-                                      plotlyOutput("SeperatedIdentityCategorical", height = "500px"),
-                                      plotlyOutput("SeperatedIdentity2Categorical"),
-                                      plotlyOutput("SeperatedCountsCategorical")
+                                      div(style="margin:3rem", h3(textOutput("seperatedCatDescription"))),
+                                      div(style="margin: 4rem",
+                                        plotlyOutput("SeperatedIdentityCategorical", height = "500px"),
+                                        plotlyOutput("SeperatedIdentity2Categorical"),
+                                        plotlyOutput("SeperatedCountsCategorical")
+                                      )
                                       
                             )
                    ),
@@ -224,9 +232,10 @@ fluidPage(
                             
                             mainPanel(width = 12,
                                       br(),
-                                      br(),
-                                      #h3(textOutput("caption")),
-                                      tableOutput("markers")
+                                      div(style="margin:3rem", h3(textOutput("markerTableDescription"))),
+                                      div(style="margin: 4rem",
+                                        tableOutput("markers")
+                                      )
                             )
                    ), 
                    tabPanel("Download", value=10,
