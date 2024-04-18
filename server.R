@@ -41,7 +41,7 @@ function(input, output, session){
   
   # Reduction Type for the Multiple Marker Plot
   observe({
-    updateSelectInput(session, "reduction_multi", choices = reductions)
+    updateSelectInput(session, "reduction_multi", choices = reductions, selected=default_reduction)
   })
   
   # Primary numeric value in the multiple marker plot
@@ -67,7 +67,7 @@ function(input, output, session){
   
   # Seperated Reduction
   observe({
-    updateSelectInput(session, "reduction_seperated", choices = reductions)
+    updateSelectInput(session, "reduction_seperated", choices = reductions, selected=default_reduction)
   })
 
   # Seperated categroical Identity
@@ -82,7 +82,7 @@ function(input, output, session){
   
   # Seperated categorical Reduction
   observe({
-    updateSelectInput(session, "reduction_seperated_categorical", choices = reductions)
+    updateSelectInput(session, "reduction_seperated_categorical", choices = reductions, selected=default_reduction)
   })
   
   

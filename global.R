@@ -26,6 +26,8 @@ meta_cats <- c(colnames(dplyr::select_if(aggregate@meta.data, is.character)),
 meta_cats <- meta_cats[meta_cats != "orig.ident"]
 mysplitbydefault <- "major_cluster"
 
+default_reduction <- "umap"
+
 #mysplitbydefault <- "CellType"
 pcs <- c('PC_1','PC_2','PC_3','PC_4','PC_5','PC_6','PC_7','PC_8','PC_9')
 use.pcs <- 1:50
