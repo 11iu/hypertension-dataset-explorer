@@ -8,36 +8,7 @@ fluidPage(
                             uiOutput('markdown')
                    ),
                    
-                   tabPanel("Single Marker", value=2,
-                            br(),
-                            div(style="display: flex; justify-content: space-between; vertical-align:top;", 
-                              div(style="flex: 1; margin: 0 0.4rem;",
-                                  selectInput("dataset_single", "Dataset",
-                                              c(datasets))),
-                              div(style="flex: 1; margin: 0 0.4rem;",
-                                  selectInput("subset_single", "Numeric Analysis Type:",
-                                              c('Genes', 'Numeric Metadata', 'PCs'))),
-                              div(style="flex: 1; margin: 0 0.4rem;",
-                                  selectInput("reduction_single", "Reduction:",
-                                              c(reductions), selected = "umap")),
-                              div(style="flex: 1; margin: 0 0.4rem;",
-                                  selectInput("categorical_single", "Identity:",
-                                              c(meta_cats))),
-                              div(style="flex: 1; margin: 0 0.4rem;",
-                                  selectInput("numeric_single", "Primary Numeric:", ""))
-                            ),
-                            
-                            mainPanel(width = 12,
-                                      br(),
-                                      h3(style="margin: 3rem;", textOutput("singleMarkerDescription")),
-                                      div(style="margin: 4rem",
-                                          plotlyOutput("MarkerGenePlotSingle"),
-                                          plotlyOutput("ViolinPlotSingle"), 
-                                          plotlyOutput("CategoricalPlotSingle")
-                                      )
-                            )
-                   ),
-                   tabPanel("Multiple Marker", value=3,
+                   tabPanel("Multiple Marker", value=2,
                             br(),
                             div(style="display: flex; justify-content: space-between; vertical-align:top;",
                               div(style="flex: 1; margin: 0 0.4rem;",
@@ -75,7 +46,7 @@ fluidPage(
                                       )
                             )
                    ),
-                   tabPanel("Marker Set (Grid)", value=4,
+                   tabPanel("Marker Set (Grid)", value=3,
                             br(),
                             div(style="display: flex; justify-content: space-between; vertical-align:top;",
                               div(style="flex: 1; margin: 0 0.4rem;",
@@ -103,7 +74,7 @@ fluidPage(
                                       )
                             )
                    ),
-                   tabPanel("Multiple Feature Plot", value=5,
+                   tabPanel("Multiple Feature Plot", value=4,
                             br(),
                             div(style="display: flex; justify-content: space-between; vertical-align:top;",
                               div(style="flex: 1; margin: 0 0.4rem;",
@@ -136,7 +107,7 @@ fluidPage(
                                       )
                             )
                    ),
-                   tabPanel("Cluster Tree", value=6,
+                   tabPanel("Cluster Tree", value=5,
                             br(),
                             div(style="display: flex; justify-content: space-between; vertical-align:top;",
                               div(style="flex: 1; margin: 0 0.4rem;",
@@ -154,7 +125,7 @@ fluidPage(
                                       )
                             )
                    ),
-                   tabPanel("Seperated Feature", value=7,
+                   tabPanel("Seperated Feature", value=6,
                             br(),
                             div(style="display: flex; justify-content: space-between; vertical-align:top;",
                               div(style="flex: 1; margin: 0 0.4rem;",
@@ -187,7 +158,7 @@ fluidPage(
                                       )
                             )
                    ),
-                   tabPanel("Seperated Categorical", value=8,
+                   tabPanel("Seperated Categorical", value=7,
                             br(),
                             div(style="display: flex; justify-content: space-between; vertical-align:top;",
                               div(style="flex: 1; margin: 0 0.4rem;",
@@ -214,7 +185,7 @@ fluidPage(
                                       
                             )
                    ),
-                   tabPanel("Marker Table", value=9,
+                   tabPanel("Marker Table", value=8,
                             br(),
                             div(style="display: flex; justify-content: space-between; vertical-align:top;",
                               div(style="flex: 1; margin: 0 0.4rem;",
@@ -238,7 +209,7 @@ fluidPage(
                                       )
                             )
                    ), 
-                   tabPanel("Download", value=10,
+                   tabPanel("Download", value=9,
                             br(),
                             div(style="display: flex; flex-direction: column; justify-content: space-between; vertical-align:top;",
                               div(style="flex: 1; margin: 0 0.4rem;",

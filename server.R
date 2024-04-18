@@ -3,7 +3,6 @@ function(input, output, session){
   # update dataset based on selection from ui
   aggregate <- reactive({
     readRDS(paste("datasets/", input$dataset_multi, sep=""))
-    readRDS(paste("datasets/", input$dataset_single, sep=""))
     readRDS(paste("datasets/", input$dataset_markset, sep=""))
     readRDS(paste("datasets/", input$dataset_multifea, sep=""))
     readRDS(paste("datasets/", input$dataset_cluster, sep=""))
@@ -13,15 +12,6 @@ function(input, output, session){
     readRDS(paste("datasets/", input$dataset_download, sep=""))
   })
   
-  # update values based on input from ui
-  outVar_single = reactive({
-    mydata = switch(input$subset_single, 
-                   'Genes' = rownames(genes),
-                   'Numeric Metadata' = meta_nums,
-                   "PCs" = pcs
-    )
-    mydata
-  })
   
   # update values based on input from ui
   outVar_double = reactive({
@@ -48,12 +38,8 @@ function(input, output, session){
     mydata
   })
   
-  # Reduction Type for the Single Marker Plot
-  observe({
-    updateSelectInput(session, "reduction_single", choices = reductions)
-  })
   
-  # Reduction Type for the Double Marker Plot
+  # Reduction Type for the Multiple Marker Plot
   observe({
     updateSelectInput(session, "reduction_multi", choices = reductions)
   })
@@ -63,11 +49,6 @@ function(input, output, session){
     updateSelectizeInput(session, "multi_numeric", choices = outVar_double(), server = TRUE)
   })
   
-  
-  # Only numeric input for the single marker plot
-  observe({
-    updateSelectInput(session, "numeric_single", choices = outVar_single())
-  })
   
   # Cluster Tree identity
   observe({
@@ -139,14 +120,6 @@ function(input, output, session){
     includeMarkdown("README.md")
   }) 
   
-  # Marker Plot Single
-  output$MarkerGenePlotSingle <- renderPlotly({
-    temp_aggregate <- aggregate()
-    p <- FeaturePlot(temp_aggregate, c(input$numeric_single), reduction=input$reduction_single) +
-      theme_minimal()
-    ggplotly(p)
-  })
-  
   multi_marker_gene_plot_list <- reactive({
     result <- list()
     for (i in seq_along(input$multi_numeric)) {
@@ -160,7 +133,7 @@ function(input, output, session){
   # Marker Plot multiple
   output$MarkerGenePlotMulti <- renderUI({
     plot_output_list <- lapply(seq_along(multi_marker_gene_plot_list()), function(i) {
-      div(style="display: inline-block", plotlyOutput(outputId = paste("multi_marker_gene_plot", i, sep = "_"))) # make placeholder name plot_i for each plot
+      div(style="display: inline-block; width: 49%", plotlyOutput(outputId = paste("multi_marker_gene_plot", i, sep = "_"))) # make placeholder name plot_i for each plot
     })
     do.call(tagList, plot_output_list) # combines plotlyOutputs
     
@@ -175,17 +148,6 @@ function(input, output, session){
     })
   })
   
-  # Single Feature Categorical Feature Plot
-  output$CategoricalPlotSingle <- renderPlotly({
-    temp_aggregate <- aggregate()
-    Idents(temp_aggregate) <- input$categorical_single
-    order <- sort(levels(temp_aggregate))
-    levels(temp_aggregate) <- order
-    p <- DimPlot(object = temp_aggregate, group.by=input$categorical_single, pt.size=0.5, reduction = input$reduction_single, label = T, repel = TRUE) +
-      theme_minimal()
-    ggplotly(p)
-  })
-  
   
   # Multi Feature Categorical Feature Plot
   output$CategoricalPlotMulti <- renderPlotly({
@@ -198,17 +160,6 @@ function(input, output, session){
     ggplotly(p)
   })
   
-  
-  # Single Feature Violin Plot
-  output$ViolinPlotSingle <- renderPlotly({
-    temp_aggregate <- aggregate()
-    Idents(temp_aggregate) <- input$categorical_single
-    order <- sort(levels(temp_aggregate))
-    levels(temp_aggregate) <- order
-    p <- VlnPlot(object = temp_aggregate, features = c(input$numeric_single), pt.size = 0.05) + 
-      theme_minimal()
-    ggplotly(p)
-  })
   
   # Multiple marker violin plot
   multi_marker_vln_plot_list <- reactive({
@@ -226,7 +177,7 @@ function(input, output, session){
   
   output$ViolinPlotMulti <- renderUI({
     plot_output_list <- lapply(seq_along(multi_marker_vln_plot_list()), function(i) {
-      div(style="display: inline-block", plotlyOutput(outputId = paste("multi_marker_vln_plot", i, sep = "_"))) # make placeholder name plot_i for each plot
+      div(style="display: inline-block; width: 49%", plotlyOutput(outputId = paste("multi_marker_vln_plot", i, sep = "_"))) # make placeholder name plot_i for each plot
     })
     do.call(tagList, plot_output_list) # combines plotlyOutputs
     
@@ -440,9 +391,6 @@ function(input, output, session){
   })
   
   # descriptions
-  output$singleMarkerDescription <- renderText({
-    text <- "Single Marker Description"
-  })
   
   output$multiMarkerDescription <- renderText({
     text <- "Multiple Marker Description"
