@@ -2,14 +2,14 @@ function(input, output, session){
   
   # update dataset based on selection from ui
   aggregate <- reactive({
-    readRDS(paste("datasets/", input$dataset_multi, sep=""))
-    readRDS(paste("datasets/", input$dataset_markset, sep=""))
-    readRDS(paste("datasets/", input$dataset_multifea, sep=""))
-    readRDS(paste("datasets/", input$dataset_cluster, sep=""))
-    readRDS(paste("datasets/", input$dataset_sepfea, sep=""))
-    readRDS(paste("datasets/", input$dataset_sepcat, sep=""))
-    readRDS(paste("datasets/", input$dataset_marktab, sep=""))
-    readRDS(paste("datasets/", input$dataset_download, sep=""))
+    readRDS(paste("datasets/", datasets[[input$animal_multi]][[input$species_multi]][[input$tissue_multi]], sep=""))
+    readRDS(paste("datasets/", datasets[[input$animal_markerset]][[input$species_markerset]][[input$tissue_markerset]], sep=""))
+    readRDS(paste("datasets/", datasets[[input$animal_multifea]][[input$species_multifea]][[input$tissue_multifea]], sep=""))
+    readRDS(paste("datasets/", datasets[[input$animal_cluster]][[input$species_cluster]][[input$tissue_cluster]], sep=""))
+    readRDS(paste("datasets/", datasets[[input$animal_sepfea]][[input$species_sepfea]][[input$tissue_sepfea]], sep=""))
+    readRDS(paste("datasets/", datasets[[input$animal_sepcat]][[input$species_sepcat]][[input$tissue_sepcat]], sep=""))
+    readRDS(paste("datasets/", datasets[[input$animal_marktab]][[input$species_marktab]][[input$tissue_marktab]], sep=""))
+    readRDS(paste("datasets/", datasets[[input$animal_download]][[input$species_download]][[input$tissue_download]], sep=""))
   })
   
   
@@ -38,10 +38,190 @@ function(input, output, session){
     mydata
   })
   
+  species_multi_choices <- reactive({
+    return(names(datasets[[input$animal_multi]]))
+  })
+  
+  tissue_multi_choices <- reactive({
+    return(names(datasets[[input$animal_multi]][[input$species_multi]]))
+  })
+  
+  species_markerset_choices <- reactive({
+    req(input$animal_markerset)
+    return(names(datasets[[input$animal_markerset]]))
+  })
+  
+  tissue_markerset_choices <- reactive({
+    req(input$animal_markerset, input$species_markerset)
+    return(names(datasets[[input$animal_markerset]][[input$species_markerset]]))
+  })
+  
+  species_multifea_choices <- reactive({
+    req(input$animal_multifea)
+    return(names(datasets[[input$animal_multifea]]))
+  })
+  
+  tissue_multifea_choices <- reactive({
+    req(input$animal_multifea, input$species_multifea)
+    return(names(datasets[[input$animal_multifea]][[input$species_multifea]]))
+  })
+  
+  species_cluster_choices <- reactive({
+    req(input$animal_cluster)
+    return(names(datasets[[input$animal_cluster]]))
+  })
+  
+  tissue_cluster_choices <- reactive({
+    req(input$animal_cluster, input$species_cluster)
+    return(names(datasets[[input$animal_cluster]][[input$species_cluster]]))
+  })
+  
+  species_sepfea_choices <- reactive({
+    req(input$animal_sepfea)
+    return(names(datasets[[input$animal_sepfea]]))
+  })
+  
+  tissue_sepfea_choices <- reactive({
+    req(input$animal_sepfea, input$species_sepfea)
+    return(names(datasets[[input$animal_sepfea]][[input$species_sepfea]]))
+  })
+  
+  species_sepcat_choices <- reactive({
+    req(input$animal_sepcat)
+    return(names(datasets[[input$animal_sepcat]]))
+  })
+  
+  tissue_sepcat_choices <- reactive({
+    req(input$animal_sepcat, input$species_sepcat)
+    return(names(datasets[[input$animal_sepcat]][[input$species_sepcat]]))
+  })
+  
+  species_marktab_choices <- reactive({
+    req(input$animal_marktab)
+    return(names(datasets[[input$animal_marktab]]))
+  })
+  
+  tissue_marktab_choices <- reactive({
+    req(input$animal_marktab, input$species_marktab)
+    return(names(datasets[[input$animal_marktab]][[input$species_marktab]]))
+  })
+  
+  species_download_choices <- reactive({
+    req(input$animal_download)
+    return(names(datasets[[input$animal_download]]))
+  })
+  
+  tissue_download_choices <- reactive({
+    req(input$animal_download, input$species_download)
+    return(names(datasets[[input$animal_download]][[input$species_download]]))
+  })
+  
+  observe({
+    updateSelectInput(session, "animal_multi", choices = names(datasets))
+  })
+  
+  observe({
+    updateSelectInput(session, "species_multi", choices = species_multi_choices())
+  })
+  
+  observe({
+    updateSelectInput(session, "tissue_multi", choices = tissue_multi_choices())
+  })
+  
+  # Observe statements for 'markerset'
+  observe({
+    updateSelectInput(session, "animal_markerset", choices = names(datasets))
+  })
+  
+  observe({
+    updateSelectInput(session, "species_markerset", choices = species_markerset_choices())
+  })
+  
+  observe({
+    updateSelectInput(session, "tissue_markerset", choices = tissue_markerset_choices())
+  })
+  
+  # Observe statements for 'multifea'
+  observe({
+    updateSelectInput(session, "animal_multifea", choices = names(datasets))
+  })
+  
+  observe({
+    updateSelectInput(session, "species_multifea", choices = species_multifea_choices())
+  })
+  
+  observe({
+    updateSelectInput(session, "tissue_multifea", choices = tissue_multifea_choices())
+  })
+  
+  # Observe statements for 'cluster'
+  observe({
+    updateSelectInput(session, "animal_cluster", choices = names(datasets))
+  })
+  
+  observe({
+    updateSelectInput(session, "species_cluster", choices = species_cluster_choices())
+  })
+  
+  observe({
+    updateSelectInput(session, "tissue_cluster", choices = tissue_cluster_choices())
+  })
+  
+  # Observe statements for 'sepfea'
+  observe({
+    updateSelectInput(session, "animal_sepfea", choices = names(datasets))
+  })
+  
+  observe({
+    updateSelectInput(session, "species_sepfea", choices = species_sepfea_choices())
+  })
+  
+  observe({
+    updateSelectInput(session, "tissue_sepfea", choices = tissue_sepfea_choices())
+  })
+  
+  # Observe statements for 'sepcat'
+  observe({
+    updateSelectInput(session, "animal_sepcat", choices = names(datasets))
+  })
+  
+  observe({
+    updateSelectInput(session, "species_sepcat", choices = species_sepcat_choices())
+  })
+  
+  observe({
+    updateSelectInput(session, "tissue_sepcat", choices = tissue_sepcat_choices())
+  })
+  
+  # Observe statements for 'marktab'
+  observe({
+    updateSelectInput(session, "animal_marktab", choices = names(datasets))
+  })
+  
+  observe({
+    updateSelectInput(session, "species_marktab", choices = species_marktab_choices())
+  })
+  
+  observe({
+    updateSelectInput(session, "tissue_marktab", choices = tissue_marktab_choices())
+  })
+  
+  # Observe statements for 'download'
+  observe({
+    updateSelectInput(session, "animal_download", choices = names(datasets))
+  })
+  
+  observe({
+    updateSelectInput(session, "species_download", choices = species_download_choices())
+  })
+  
+  observe({
+    updateSelectInput(session, "tissue_download", choices = tissue_download_choices())
+  })
   
   # Reduction Type for the Multiple Marker Plot
   observe({
-    updateSelectInput(session, "reduction_multi", choices = reductions, selected=default_reduction)
+    updateSelectInput(session, "reduction_multi", choices = reductions)
   })
   
   # Primary numeric value in the multiple marker plot
