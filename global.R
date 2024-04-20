@@ -11,19 +11,19 @@ library(plotly)
 # Some initial setup:
 # this will not work if underscores are in the orig.ident (only for some views)
 # take in the file, get list of genes, get metadata numbers and categories, get pcs 1-9, and factors..
-aggregate <- readRDS('datasets/rat.ss.HYP.RNA.anno.rds') # default one 
+aggregate <- readRDS("datasets/rat.sp.MSA.RNA.anno.v2.rds") # default one 
 # datasets <- c('rat.ss.MSA.RNA.anno.v2.rds', 'rat.ss.LV.RNA.anno.v2.rds', 'rat.ss.LK.multiomics.anno.v2.rds', 'rat.ss.HYP.RNA.anno.rds', 'rat.sp.MSA.RNA.anno.v2.rds', 'rat.sp.MCA.RNA.anno.v2.rds', 'rat.sp.LV.RNA.anno.v2.rds', 'rat.sp.LK.multiomics.anno.v2.rds', 'rat.sp.HYP.RNA.anno.rds', 'mouse.MCA.RNA.anno.v2.rds', 'mouse.LV.RNA.anno.v2.rds', 'mouse.LK.multiomics.anno.v2.rds', 'mouse.HYP.RNA.anno.rds')
 datasets <- list( 
   "Rat" = list(
     "SS" = list(
-      "HYP" = "rat.ss.HYP.RNA.anno.rds",
-      # "MCA" = "rat.ss.MCA.RNA.anno.v2.rds",
+      "HYP" = "rat.ss.HYP.RNA.anno.v2.rds",
+      "MCA" = "rat.ss.MCA.RNA.anno.v2.rds",
       "LV" = "rat.ss.LV.RNA.anno.v2.rds",
-      # "LK" = "rat.ss.LK.multiomics.anno.v2.rds",
+      "LK" = "rat.ss.LK.multiomics.anno.v2.rds",
       "MSA" = "rat.ss.MSA.RNA.anno.v2.rds"
     ),
     "SP" = list(
-      # "HYP" = "rat.sp.HYP.RNA.anno.rds",
+      "HYP" = "rat.sp.HYP.RNA.anno.v2.rds",
       "MCA" = "rat.sp.MCA.RNA.anno.v2.rds",
       "LV" = "rat.sp.LV.RNA.anno.v2.rds",
       "LK" = "rat.sp.LK.multiomics.anno.v2.rds",
@@ -32,7 +32,7 @@ datasets <- list(
   ),
   "Mouse" = list(
     "Generic" = list(
-      "HYP" = "mouse.HYP.RNA.anno.rds",
+      "HYP" = "mouse.HYP.RNA.anno.v2.rds",
       "MCA" = "mouse.MCA.RNA.anno.v2.rds",
       "LV" = "mouse.LV.RNA.anno.v2.rds",
       "LK" = "mouse.LK.multiomics.anno.v2.rds"
@@ -55,8 +55,8 @@ mysplitbydefault <- "major_cluster"
 
 default_reduction <- "umap"
 default_animal <- "Rat"
-default_species <- "SS"
-default_tissue <- "HYP"
+default_strain <- "SP"
+default_tissue <- "MSA"
 
 #mysplitbydefault <- "CellType"
 pcs <- c('PC_1','PC_2','PC_3','PC_4','PC_5','PC_6','PC_7','PC_8','PC_9')
