@@ -49,7 +49,10 @@ function(input, output, session){
   
   observeEvent(c(input$animal_multi, input$strain_multi, input$tissue_multi), {
     req(input$animal_multi, input$strain_multi, input$tissue_multi)
-    readRDS(paste("datasets/", datasets[[input$animal_multi]][[input$strain_multi]][[input$tissue_multi]], sep=""))
+    data_file <- paste("datasets/", datasets[[input$animal_multi]][[input$strain_multi]][[input$tissue_multi]], sep="")
+    if (file.exists(data_file)){
+      aggregate(readRDS(data_file))
+    }
   })
   
   # Observe statements for 'markerset'
@@ -63,7 +66,10 @@ function(input, output, session){
   
   observeEvent(c(input$animal_markerset, input$strain_markerset, input$tissue_markerset), {
     req(input$animal_markerset, input$strain_markerset, input$tissue_markerset)
-    readRDS(paste("datasets/", datasets[[input$animal_markerset]][[input$strain_markerset]][[input$tissue_markerset]], sep=""))
+    data_file <- paste("datasets/", datasets[[input$animal_markerset]][[input$strain_markerset]][[input$tissue_markerset]], sep="")
+    if (file.exists(data_file)){
+      aggregate(readRDS(data_file))
+    }
   })
   
   
@@ -78,7 +84,10 @@ function(input, output, session){
   
   observeEvent(c(input$animal_multifea, input$strain_multifea, input$tissue_multifea), {
     req(input$animal_multifea, input$strain_multifea, input$tissue_multifea)
-    readRDS(paste("datasets/", datasets[[input$animal_multifea]][[input$strain_multifea]][[input$tissue_multifea]], sep=""))
+    data_file <- paste("datasets/", datasets[[input$animal_multifea]][[input$strain_multifea]][[input$tissue_multifea]], sep="")
+    if (file.exists(data_file)){
+      aggregate(readRDS(data_file))
+    }
   })
   
   
@@ -93,7 +102,10 @@ function(input, output, session){
   
   observeEvent(c(input$animal_cluster, input$strain_cluster, input$tissue_cluster), {
     req(input$animal_cluster, input$strain_cluster, input$tissue_cluster)
-    readRDS(paste("datasets/", datasets[[input$animal_cluster]][[input$strain_cluster]][[input$tissue_cluster]], sep=""))
+    data_file <- paste("datasets/", datasets[[input$animal_cluster]][[input$strain_cluster]][[input$tissue_cluster]], sep="")
+    if (file.exists(data_file)){
+      aggregate(readRDS(data_file))
+    }
   })
   
   
@@ -108,7 +120,10 @@ function(input, output, session){
   
   observeEvent(c(input$animal_sepfea, input$strain_sepfea, input$tissue_sepfea), {
     req(input$animal_sepfea, input$strain_sepfea, input$tissue_sepfea)
-    readRDS(paste("datasets/", datasets[[input$animal_sepfea]][[input$strain_sepfea]][[input$tissue_sepfea]], sep=""))
+    data_file <- paste("datasets/", datasets[[input$animal_sepfea]][[input$strain_sepfea]][[input$tissue_sepfea]], sep="")
+    if (file.exists(data_file)){
+      aggregate(readRDS(data_file))
+    }
   })
   
   
@@ -123,7 +138,10 @@ function(input, output, session){
   
   observeEvent(c(input$animal_sepcat, input$strain_sepcat, input$tissue_sepcat), {
     req(input$animal_sepcat, input$strain_sepcat, input$tissue_sepcat)
-    readRDS(paste("datasets/", datasets[[input$animal_sepcat]][[input$strain_sepcat]][[input$tissue_sepcat]], sep=""))
+    data_file <- paste("datasets/", datasets[[input$animal_sepcat]][[input$strain_sepcat]][[input$tissue_sepcat]], sep="")
+    if (file.exists(data_file)){
+      aggregate(readRDS(data_file))
+    }
   })
   
   
@@ -138,7 +156,10 @@ function(input, output, session){
   
   observeEvent(c(input$animal_marktab, input$strain_marktab, input$tissue_marktab), {
     req(input$animal_marktab, input$strain_marktab, input$tissue_marktab)
-    readRDS(paste("datasets/", datasets[[input$animal_marktab]][[input$strain_marktab]][[input$tissue_marktab]], sep=""))
+    data_file <- paste("datasets/", datasets[[input$animal_marktab]][[input$strain_marktab]][[input$tissue_marktab]], sep="")
+    if (file.exists(data_file)){
+      aggregate(readRDS(data_file))
+    }
   })
   
   
@@ -153,7 +174,10 @@ function(input, output, session){
   
   observeEvent(c(input$animal_download, input$strain_download, input$tissue_download), {
     req(input$animal_download, input$strain_download, input$tissue_download)
-    readRDS(paste("datasets/", datasets[[input$animal_download]][[input$strain_download]][[input$tissue_download]], sep=""))
+    data_file <- paste("datasets/", datasets[[input$animal_download]][[input$strain_download]][[input$tissue_download]], sep="")
+    if (file.exists(data_file)){
+      aggregate(readRDS(data_file))
+    }
   })
   
   # Reduction Type for the Multiple Marker Plot
