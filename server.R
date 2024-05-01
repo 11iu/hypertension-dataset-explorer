@@ -38,146 +38,29 @@ function(input, output, session){
     mydata
   })
   
-  # Observe statements for 'multi'
-  observeEvent(input$animal_multi, {
-    updateSelectInput(session, "strain_multi", choices = names(datasets[[input$animal_multi]]))
+  # Observe statements for Dataset
+  
+  observeEvent(input$animal, {
+    updateSelectInput(session, "strain", choices = names(datasets[[input$animal]]))
   })
   
-  observeEvent(c(input$animal_multi, input$strain_multi), {
-    updateSelectInput(session, "tissue_multi", choices = names(datasets[[input$animal_multi]][[input$strain_multi]]))
+  observeEvent(c(input$animal, input$strain), {
+    updateSelectInput(session, "tissue", choices = names(datasets[[input$animal]][[input$strain]]))
   })
   
-  observeEvent(c(input$animal_multi, input$strain_multi, input$tissue_multi), {
-    req(input$animal_multi, input$strain_multi, input$tissue_multi)
-    data_file <- paste("datasets/", datasets[[input$animal_multi]][[input$strain_multi]][[input$tissue_multi]], sep="")
+  # update_text <- reactiveVal("init")
+  
+  observeEvent(input$submit_dataset, {
+    shinyjs::html("dataset_text", "Loading Dataset...")
+    
+    req(input$animal, input$strain, input$tissue)
+    data_file <- paste("datasets/", datasets[[input$animal]][[input$strain]][[input$tissue]], sep="")
     if (file.exists(data_file)){
       aggregate(readRDS(data_file))
     }
-  })
-  
-  # Observe statements for 'markerset'
-  observeEvent(input$animal_markerset, {
-    updateSelectInput(session, "strain_markerset", choices = names(datasets[[input$animal_markerset]]))
-  })
-  
-  observeEvent(c(input$animal_markerset, input$strain_markerset), {
-    updateSelectInput(session, "tissue_markerset", choices = names(datasets[[input$animal_markerset]][[input$strain_markerset]]))
-  })
-  
-  observeEvent(c(input$animal_markerset, input$strain_markerset, input$tissue_markerset), {
-    req(input$animal_markerset, input$strain_markerset, input$tissue_markerset)
-    data_file <- paste("datasets/", datasets[[input$animal_markerset]][[input$strain_markerset]][[input$tissue_markerset]], sep="")
-    if (file.exists(data_file)){
-      aggregate(readRDS(data_file))
-    }
-  })
-  
-  
-  # Observe statements for 'multifea'
-  observeEvent(input$animal_multifea, {
-    updateSelectInput(session, "strain_multifea", choices = names(datasets[[input$animal_multifea]]))
-  })
-  
-  observeEvent(c(input$animal_multifea, input$strain_multifea), {
-    updateSelectInput(session, "tissue_multifea", choices = names(datasets[[input$animal_multifea]][[input$strain_multifea]]))
-  })
-  
-  observeEvent(c(input$animal_multifea, input$strain_multifea, input$tissue_multifea), {
-    req(input$animal_multifea, input$strain_multifea, input$tissue_multifea)
-    data_file <- paste("datasets/", datasets[[input$animal_multifea]][[input$strain_multifea]][[input$tissue_multifea]], sep="")
-    if (file.exists(data_file)){
-      aggregate(readRDS(data_file))
-    }
-  })
-  
-  
-  # Observe statements for 'cluster'
-  observeEvent(input$animal_cluster, {
-    updateSelectInput(session, "strain_cluster", choices = names(datasets[[input$animal_cluster]]))
-  })
-  
-  observeEvent(c(input$animal_cluster, input$strain_cluster), {
-    updateSelectInput(session, "tissue_cluster", choices = names(datasets[[input$animal_cluster]][[input$strain_cluster]]))
-  })
-  
-  observeEvent(c(input$animal_cluster, input$strain_cluster, input$tissue_cluster), {
-    req(input$animal_cluster, input$strain_cluster, input$tissue_cluster)
-    data_file <- paste("datasets/", datasets[[input$animal_cluster]][[input$strain_cluster]][[input$tissue_cluster]], sep="")
-    if (file.exists(data_file)){
-      aggregate(readRDS(data_file))
-    }
-  })
-  
-  
-  # Observe statements for 'sepfea'
-  observeEvent(input$animal_sepfea, {
-    updateSelectInput(session, "strain_sepfea", choices = names(datasets[[input$animal_sepfea]]))
-  })
-  
-  observeEvent(c(input$animal_sepfea, input$strain_sepfea), {
-    updateSelectInput(session, "tissue_sepfea", choices = names(datasets[[input$animal_sepfea]][[input$strain_sepfea]]))
-  })
-  
-  observeEvent(c(input$animal_sepfea, input$strain_sepfea, input$tissue_sepfea), {
-    req(input$animal_sepfea, input$strain_sepfea, input$tissue_sepfea)
-    data_file <- paste("datasets/", datasets[[input$animal_sepfea]][[input$strain_sepfea]][[input$tissue_sepfea]], sep="")
-    if (file.exists(data_file)){
-      aggregate(readRDS(data_file))
-    }
-  })
-  
-  
-  # Observe statements for 'sepcat'
-  observeEvent(input$animal_sepcat, {
-    updateSelectInput(session, "strain_sepcat", choices = names(datasets[[input$animal_sepcat]]))
-  })
-  
-  observeEvent(c(input$animal_sepcat, input$strain_sepcat), {
-    updateSelectInput(session, "tissue_sepcat", choices = names(datasets[[input$animal_sepcat]][[input$strain_sepcat]]))
-  })
-  
-  observeEvent(c(input$animal_sepcat, input$strain_sepcat, input$tissue_sepcat), {
-    req(input$animal_sepcat, input$strain_sepcat, input$tissue_sepcat)
-    data_file <- paste("datasets/", datasets[[input$animal_sepcat]][[input$strain_sepcat]][[input$tissue_sepcat]], sep="")
-    if (file.exists(data_file)){
-      aggregate(readRDS(data_file))
-    }
-  })
-  
-  
-  # Observe statements for 'marktab'
-  observeEvent(input$animal_marktab, {
-    updateSelectInput(session, "strain_marktab", choices = names(datasets[[input$animal_marktab]]))
-  })
-  
-  observeEvent(c(input$animal_marktab, input$strain_marktab), {
-    updateSelectInput(session, "tissue_marktab", choices = names(datasets[[input$animal_marktab]][[input$strain_marktab]]))
-  })
-  
-  observeEvent(c(input$animal_marktab, input$strain_marktab, input$tissue_marktab), {
-    req(input$animal_marktab, input$strain_marktab, input$tissue_marktab)
-    data_file <- paste("datasets/", datasets[[input$animal_marktab]][[input$strain_marktab]][[input$tissue_marktab]], sep="")
-    if (file.exists(data_file)){
-      aggregate(readRDS(data_file))
-    }
-  })
-  
-  
-  # Observe statements for 'download'
-  observeEvent(input$animal_download, {
-    updateSelectInput(session, "strain_download", choices = names(datasets[[input$animal_download]]))
-  })
-  
-  observeEvent(c(input$animal_download, input$strain_download), {
-    updateSelectInput(session, "tissue_download", choices = names(datasets[[input$animal_download]][[input$strain_download]]))
-  })
-  
-  observeEvent(c(input$animal_download, input$strain_download, input$tissue_download), {
-    req(input$animal_download, input$strain_download, input$tissue_download)
-    data_file <- paste("datasets/", datasets[[input$animal_download]][[input$strain_download]][[input$tissue_download]], sep="")
-    if (file.exists(data_file)){
-      aggregate(readRDS(data_file))
-    }
+    
+    shinyjs::html("dataset_text", paste("Dataset loaded: ", datasets[[input$animal]][[input$strain]][[input$tissue]], sep=""))
+    
   })
   
   # Reduction Type for the Multiple Marker Plot
