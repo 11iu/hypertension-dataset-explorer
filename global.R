@@ -8,6 +8,32 @@ library(tidyr)
 library(ggthemes)
 library(plotly)
 
+imageMap <- function(inputId, imgsrc, opts, width) {
+  scaled_opts <- lapply(names(opts), function(sublist) {
+    lapply(sublist, function(x) {
+      number_list <- as.numeric(unlist(strsplit(opts[[x]], split = ",")))
+      number_list <- as.integer(number_list / 2.6) # TODO - fix the magic number
+      result <- paste(number_list, collapse=",")
+    })
+  })
+  
+  names(scaled_opts) <- names(opts)
+  
+  areas <- lapply(names(scaled_opts), function(n) { 
+    shiny::tags$area(title=n, coords=scaled_opts[[n]], 
+                     href="#", shape="poly")
+  })
+  js <- paste0("$(document).on('click', 'map area', function(evt) {
+  evt.preventDefault();
+  console.log('Area clicked:', val); // Add this line for debugging
+  var val = evt.target.title;
+  Shiny.onInputChange('", inputId, "', val);})")
+  list(
+    shiny::tags$img(src=imgsrc, usemap=paste0("#", inputId), width=paste0(width, "%"), 
+                    shiny::tags$head(tags$script(shiny::HTML(js)))),
+    shiny::tags$map(name=inputId, areas))
+}
+
 # Some initial setup:
 # this will not work if underscores are in the orig.ident (only for some views)
 # take in the file, get list of genes, get metadata numbers and categories, get pcs 1-9, and factors..
@@ -64,3 +90,10 @@ aggregate <- reactiveVal()
 pcs <- c('PC_1','PC_2','PC_3','PC_4','PC_5','PC_6','PC_7','PC_8','PC_9')
 use.pcs <- 1:50
 #agg_cats <- colnames(dplyr::select_if(aggregate@meta.data, is.factor))
+
+imgsrc <- "mouse_diagram.png"
+mapopts <- list(HYP="439,138,404,161,389,186,391,202,416,206,442,206,469,202,484,197,490,178,474,151",
+                MCA="391,211,386,234,381,260,383,275,421,279,500,277,504,204",
+                LV="408,404,409,454,464,462,497,432,476,401",
+                LK="497,445,476,465,489,509,527,498,522,456",
+                MSA="406,470,393,531,396,579,499,567,467,470")

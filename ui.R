@@ -16,13 +16,13 @@ fluidPage(
                               selectInput("tissue", "Tissue",
                                           names(datasets[[default_animal]][[default_strain]])))
                       ),
-                      actionButton("submit_dataset", "Select Dataset"),
                       mainPanel(width=12, 
                           br(),
                           br(),
-                          div(id = "dataset_text", "")
+                          div(id = "dataset_text", ""),
+                          imageMap("map1", imgsrc , mapopts, 50),
+                          actionButton("submit_dataset", "Select Dataset")
                       )
-                      
                    ),
                    
                    tabPanel("Multiple Marker", value=2,
@@ -223,7 +223,7 @@ fluidPage(
                             )
                    )
                  )
-    ),
+                 ),
     mainPanel(width = 12)
-  )
+    )
 )

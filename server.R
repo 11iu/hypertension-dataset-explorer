@@ -63,6 +63,11 @@ function(input, output, session){
     
   })
   
+  # for image mapping
+  observeEvent(input$map1,  {
+    updateSelectInput(session, "tissue", selected=input$map1)
+  })  
+  
   # Reduction Type for the Multiple Marker Plot
   observe({
     updateSelectInput(session, "reduction_multi", choices = reductions)
